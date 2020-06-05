@@ -3,7 +3,7 @@
 A small script that saves in a local database the maximum number of users reached in a given channel.
 
 ### Installation
-Needed: Node.js and NPM
+Needed: Node.js (v12.9.0) and NPM
 
 `$ npm i`
 
