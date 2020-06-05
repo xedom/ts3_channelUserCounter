@@ -5,14 +5,14 @@ A small script that saves in a local database the maximum number of users reache
 ### Installation
 Needed: Node.js and NPM
 
-`npm i`
+`$ npm i`
 
 ### Start up
-`node index.js` starts updateding of the user counter. 
+`$ node index.js` starts updateding of the user counter. 
 
-`node index.js -w` / `node index.js --watch` prints the channel status saved in the database.
+`$ node index.js -w` / `$ node index.js --watch` prints the channel status saved in the database.
 
-`node index.js -c` / `node index.js --config` creates the config file.
+`$ node index.js -c` / `$ node index.js --config` creates the config file.
 
 ### config.js
 Config file needed to run the script
