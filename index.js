@@ -1,6 +1,8 @@
 const fetch = require("node-fetch")
 const sqlite3 = require("sqlite3")
 const cfg = require("./config.js")
+const fs = require("fs")
+const path = require("path")
 
 const updateChannelsStatus = async (url,options,db,time) => {
   while (true) {
@@ -68,6 +70,17 @@ const listAllDBChannels = (db) => {
   });
 };
 
+const createConfig = () => {
+  const configName = 'config.js'
+  const configPath = path.join(__dirname, configName)
+  const configBody = `module.exports = {\n\tupdateTime: 5, // in minutes\n\tdebugLevel: 1, // 0 = prints only errors, 1 = prints update informations, 2 = prints all\n\thost: "127.0.0.1", // ip of the server\n\tapi: "apikeyoftheserverquery"  // api key of your server query\n}`;
+
+  fs.writeFile(configPath, configBody, (err) => {
+    if (err) throw err;
+    console.log('Config has been created');
+  })
+}
+
 const param = process.argv[2]
 const url = `http://${cfg.host}:10080/1/channellist`;
 const options = {
@@ -92,9 +105,11 @@ db.serialize(() => {
 
   if (param == "") {
     updateChannelsStatus(url,options,db,time);
-  } else if (param == "-w") {
+  } else if (param == "-w" || param == "--watch") {
     listAllDBChannels(db)
-  } else if (param == "--help") {
-    console.log("If you lauch the index.js without params: 'node index.js' it start updateding the channel. \nIf you lauch it with -w param: 'node index.js -w', it prints the channel status saved in the database.");
+  } else if (param == "-c" || param == "--config") {
+    createConfig()
+  } else if (param == "-h" || param == "--help") {
+    console.log("\nIf you lauch the index.js without params: 'node index.js' it start updateding the channel. \nIf you lauch it with -w param: 'node index.js -w', it prints the channel status saved in the database.\n");
   };
 });
