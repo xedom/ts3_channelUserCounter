@@ -3,7 +3,9 @@
 A small script that saves in a local database the maximum number of users reached in a given channel.
 
 `node index.js` starts updateding of the user counter. 
+
 `node index.js -w` / `node index.js --watch` prints the channel status saved in the database.
+
 `node index.js -c` / `node index.js --config` creates the config file.
 
 ### config.js
