@@ -104,8 +104,8 @@ const main = () => {
       date DATETIME,
       PRIMARY KEY (cid)
     );`);
-  
-    if (param == "s") {
+
+    if (param == undefined || param == "") {
       updateChannelsStatus(url,options,db,time);
     } else if (param == "-w" || param == "--watch") {
       listAllDBChannels(db)
