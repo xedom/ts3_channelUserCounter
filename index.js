@@ -1,8 +1,8 @@
-const fetch = require("node-fetch")
-const sqlite3 = require("sqlite3")
-const cfg = require("./config.js")
 const fs = require("fs")
 const path = require("path")
+const fetch = require("node-fetch")
+const sqlite3 = require("sqlite3")
+const param = process.argv[2]
 
 const updateChannelsStatus = async (url,options,db,time) => {
   while (true) {
@@ -81,35 +81,47 @@ const createConfig = () => {
   })
 }
 
-const param = process.argv[2]
-const url = `http://${cfg.host}:10080/1/channellist`;
-const options = {
-    method: "post",
-    headers: {
-        'x-api-key': cfg.api,
-        'Content-Type': 'application/json'
-    }
-};
-const time = cfg.updateTime * 1000 * 60;
-const db = new sqlite3.Database('botDB.sqlite3');
-
-db.serialize(() => {
-  db.run(`
-  CREATE TABLE IF NOT EXISTS channels (
-    cid INTEGER,
-    name TEXT,
-    users INTEGER,
-    date DATETIME,
-    PRIMARY KEY (cid)
-  );`);
-
-  if (param == "") {
-    updateChannelsStatus(url,options,db,time);
-  } else if (param == "-w" || param == "--watch") {
-    listAllDBChannels(db)
-  } else if (param == "-c" || param == "--config") {
-    createConfig()
-  } else if (param == "-h" || param == "--help") {
-    console.log("\nIf you lauch the index.js without params: 'node index.js' it start updateding the channel. \nIf you lauch it with -w param: 'node index.js -w', it prints the channel status saved in the database.\n");
+const main = () => {
+  const cfg = require("./config.js")
+  
+  const url = `http://${cfg.host}:10080/1/channellist`;
+  const options = {
+      method: "post",
+      headers: {
+          'x-api-key': cfg.api,
+          'Content-Type': 'application/json'
+      }
   };
-});
+  const time = cfg.updateTime * 1000 * 60;
+  const db = new sqlite3.Database('botDB.sqlite3');
+  
+  db.serialize(() => {
+    db.run(`
+    CREATE TABLE IF NOT EXISTS channels (
+      cid INTEGER,
+      name TEXT,
+      users INTEGER,
+      date DATETIME,
+      PRIMARY KEY (cid)
+    );`);
+  
+    if (param == "s") {
+      updateChannelsStatus(url,options,db,time);
+    } else if (param == "-w" || param == "--watch") {
+      listAllDBChannels(db)
+    } else if (param == "-h" || param == "--help") {
+      console.log("\nIf you lauch the index.js without params: 'node index.js' it start updateding the channel. \nIf you lauch it with -w param: 'node index.js -w', it prints the channel status saved in the database.\n");
+    };
+  });
+}
+
+
+if (param == "-c" || param == "--config") {
+  createConfig()
+} else {
+  try {
+    main()
+  } catch (err) {
+    console.log(err.message)
+  }
+}
