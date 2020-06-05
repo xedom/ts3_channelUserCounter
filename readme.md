@@ -17,7 +17,7 @@ Needed: Node.js and NPM
 ### config.js
 Config file needed to run the script
 
-````javascript
+```javascript
 module.exports = {
     updateTime: 5, // in minutes
     debugLevel: 1, // 0 = prints only errors, 1 = prints update informations, 2 = prints all
